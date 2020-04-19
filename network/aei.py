@@ -85,7 +85,7 @@ class ADDGenerator(nn.Module):
         super(ADDGenerator, self).__init__()
         self.conv_t = nn.ConvTranspose2d(in_channels=512, out_channels=2034, kernel_size=2, stride=1, padding=0, bias=False)
         self.add1 = ADDResBlk(1024, 1024, 1024, c_id)
-        self.add2 = ADDResBlk(1024, 1024, 2048, c_id)
+        self.add2 = ADDResBlk(1024, 1024, 1024, c_id)
         self.add3 = ADDResBlk(1024, 1024, 1024, c_id)
         self.add4 = ADDResBlk(1024, 512, 512, c_id)
         self.add5 = ADDResBlk(512, 256, 256, c_id)
