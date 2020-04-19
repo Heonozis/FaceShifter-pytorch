@@ -22,7 +22,7 @@ class ADD(nn.Module):
         h_norm = self.norm(h)
 
         att_beta = self.att_conv1(z_att)
-        att_gamma = self.att_conv(z_att)
+        att_gamma = self.att_conv2(z_att)
 
         id_beta = self.id_fc1(z_id)
         id_gamma = self.id_fc2(z_id)
