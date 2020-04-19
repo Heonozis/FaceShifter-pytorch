@@ -27,8 +27,8 @@ class ADD(nn.Module):
         id_beta = self.id_fc1(z_id)
         id_gamma = self.id_fc2(z_id)
 
-        id_beta = id_beta.reshape(h.shape[0], self.c_x, 1, 1).expand_as(h_norm)
-        id_gamma = id_gamma.reshape(h.shape[0], self.c_x, 1, 1).expand_as(h_norm)
+        id_beta = id_beta.reshape(h_norm.shape[0], self.c_x, 1, 1).expand_as(h_norm)
+        id_gamma = id_gamma.reshape(h_norm.shape[0], self.c_x, 1, 1).expand_as(h_norm)
 
         M = torch.sigmoid(self.h_conv(h_norm))
         A = att_gamma * h_norm + att_beta
