@@ -8,15 +8,15 @@ class ADD(nn.Module):
 
         self.c_x = c_x
 
-        self.h_conv = nn.Conv2d(in_channels=c_x, out_channels=1, kernel_size=1, stride=1, padding=1, bias=False)
+        self.h_conv = nn.Conv2d(in_channels=c_x, out_channels=1, kernel_size=1, stride=1, padding=0, bias=True)
 
-        self.att_conv1 = nn.Conv2d(in_channels=c_att, out_channels=c_x, kernel_size=4, stride=2, padding=1, bias=False)
-        self.att_conv2 = nn.Conv2d(in_channels=c_att, out_channels=c_x, kernel_size=4, stride=2, padding=1, bias=False)
+        self.att_conv1 = nn.Conv2d(in_channels=c_att, out_channels=c_x, kernel_size=1, stride=1, padding=0, bias=True)
+        self.att_conv2 = nn.Conv2d(in_channels=c_att, out_channels=c_x, kernel_size=1, stride=1, padding=0, bias=True)
 
         self.id_fc1 = nn.Linear(c_id, c_x)
         self.id_fc2 = nn.Linear(c_id, c_x)
 
-        self.norm = nn.InstanceNorm2d(c_x)
+        self.norm = nn.InstanceNorm2d(c_x, affine=False)
 
     def forward(self, h, z_att, z_id):
         h_norm = self.norm(h)
