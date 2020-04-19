@@ -69,11 +69,11 @@ class MAE(nn.Module):
         z_att1 = self.conv7(enc6)
 
         z_att2 = self.conv_t1(z_att1, enc6)
-        z_att3 = self.conv_t2(z_att1, enc5)
-        z_att4 = self.conv_t3(z_att1, enc4)
-        z_att5 = self.conv_t4(z_att1, enc3)
-        z_att6 = self.conv_t5(z_att1, enc2)
-        z_att7 = self.conv_t6(z_att1, enc1)
+        z_att3 = self.conv_t2(z_att2, enc5)
+        z_att4 = self.conv_t3(z_att3, enc4)
+        z_att5 = self.conv_t4(z_att4, enc3)
+        z_att6 = self.conv_t5(z_att5, enc2)
+        z_att7 = self.conv_t6(z_att6, enc1)
 
         z_att8 = F.interpolate(z_att7, scale_factor=2, mode='bilinear', align_corners=True)
 
