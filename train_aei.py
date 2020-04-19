@@ -13,7 +13,7 @@ from apex import amp
 import visdom
 
 
-vis = visdom.Visdom(server='127.0.0.1', env='faceshifter', port=8099)
+vis = visdom.Visdom(server='127.0.0.1', env='faceshifter', port=8097)
 batch_size = 16
 lr_G = 4e-4
 lr_D = 4e-4
@@ -49,7 +49,7 @@ try:
 except Exception as e:
     print(e)
 
-dataset = FaceEmbed(['../celeb-aligned-256/'], same_prob=0.8)
+dataset = FaceEmbed(['../img_align_celeba/'], same_prob=0.8)
 
 dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=0, drop_last=True)
 

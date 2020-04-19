@@ -66,7 +66,7 @@ class MAE(nn.Module):
         enc5 = self.conv5(enc4)
         enc6 = self.conv6(enc5)
 
-        z_att1 = self.conv3(enc6)
+        z_att1 = self.conv7(enc6)
 
         z_att2 = self.conv_t1(z_att1, enc6)
         z_att3 = self.conv_t2(z_att1, enc5)
