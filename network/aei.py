@@ -83,7 +83,7 @@ class MAE(nn.Module):
 class ADDGenerator(nn.Module):
     def __init__(self, c_id=512):
         super(ADDGenerator, self).__init__()
-        self.conv_t = nn.ConvTranspose2d(in_channels=512, out_channels=2034, kernel_size=2, stride=1, padding=0, bias=False)
+        self.conv_t = nn.ConvTranspose2d(in_channels=c_id, out_channels=1024, kernel_size=2, stride=1, padding=0, bias=False)
         self.add1 = ADDResBlk(1024, 1024, 1024, c_id)
         self.add2 = ADDResBlk(1024, 1024, 2048, c_id)
         self.add3 = ADDResBlk(1024, 1024, 1024, c_id)
@@ -96,7 +96,7 @@ class ADDGenerator(nn.Module):
         self.apply(init_weights)
 
     def forward(self, z_att, z_id):
-        x = self.conv_t(z_id)
+        x = self.conv_t(z_id.reshape(z_id.shape[0], -1, 1, 1))
         x = self.add1(x, z_att[0], z_id)
         x = F.interpolate(x, scale_factor=2, mode='bilinear', align_corners=True)
         x = self.add2(x, z_att[1], z_id)
