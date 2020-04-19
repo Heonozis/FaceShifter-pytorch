@@ -50,11 +50,11 @@ class MAE(nn.Module):
         self.conv7 = conv(1024, 1024)
 
         self.conv_t1 = conv_transpose(1024, 1024)
-        self.conv_t2 = conv_transpose(1024, 512)
-        self.conv_t3 = conv_transpose(512, 256)
+        self.conv_t2 = conv_transpose(2048, 512)
+        self.conv_t3 = conv_transpose(1024, 256)
         self.conv_t4 = conv_transpose(256, 128)
         self.conv_t5 = conv_transpose(128, 64)
-        self.conv_t6 = conv_transpose(64, 32)
+        self.conv_t6 = conv_transpose(128, 32)
 
         self.apply(init_weights)
 
