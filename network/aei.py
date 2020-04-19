@@ -50,10 +50,10 @@ class MAE(nn.Module):
         self.conv7 = conv(1024, 1024)
 
         self.conv_t1 = conv_transpose(1024, 1024)
-        self.conv_t2 = conv_transpose(1024, 512)
-        self.conv_t3 = conv_transpose(512, 256)
-        self.conv_t4 = conv_transpose(256, 128)
-        self.conv_t5 = conv_transpose(128, 64)
+        self.conv_t2 = conv_transpose(2048, 512)
+        self.conv_t3 = conv_transpose(1024, 256)
+        self.conv_t4 = conv_transpose(512, 128)
+        self.conv_t5 = conv_transpose(256, 64)
         self.conv_t6 = conv_transpose(128, 32)
 
         self.apply(init_weights)
@@ -85,7 +85,7 @@ class ADDGenerator(nn.Module):
         super(ADDGenerator, self).__init__()
         self.conv_t = nn.ConvTranspose2d(in_channels=512, out_channels=2034, kernel_size=2, stride=1, padding=0, bias=False)
         self.add1 = ADDResBlk(1024, 1024, 1024, c_id)
-        self.add2 = ADDResBlk(1024, 1024, 1024, c_id)
+        self.add2 = ADDResBlk(1024, 1024, 2048, c_id)
         self.add3 = ADDResBlk(1024, 1024, 1024, c_id)
         self.add4 = ADDResBlk(1024, 512, 512, c_id)
         self.add5 = ADDResBlk(512, 256, 256, c_id)
