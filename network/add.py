@@ -26,12 +26,13 @@ class ADD(nn.Module):
 
         id_beta = self.id_fc1(z_id)
         id_gamma = self.id_fc2(z_id)
-        id_beta = id_beta.reshape(h.shape[0], self.c_x, 1, 1).expand_as(h)
-        id_gamma = id_gamma.reshape(h.shape[0], self.c_x, 1, 1).expand_as(h)
+
+        id_beta = id_beta.reshape(h.shape[0], self.c_x, 1, 1).expand_as(h_norm)
+        id_gamma = id_gamma.reshape(h.shape[0], self.c_x, 1, 1).expand_as(h_norm)
 
         M = torch.sigmoid(self.h_conv(h_norm))
-        A = h_norm * att_gamma + att_beta
-        I = h_norm * id_gamma + id_beta
+        A = att_gamma * h_norm + att_beta
+        I = id_gamma * h_norm + id_beta
 
         return (torch.ones_like(M).to(M.device) - M) * A + M * I
 
