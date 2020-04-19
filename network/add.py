@@ -6,7 +6,7 @@ class ADD(nn.Module):
     def __init__(self, c_x, c_att, c_id):
         super(ADD, self).__init__()
 
-        self.cx = c_x
+        self.c_x = c_x
 
         self.h_conv = nn.Conv2d(in_channels=c_x, out_channels=1, kernel_size=1, stride=1, padding=1, bias=False)
 
