@@ -1,5 +1,5 @@
 torch
 torchvision
-facenet-pytorch
 pillow
 opencv-python
+visdom

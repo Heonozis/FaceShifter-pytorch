@@ -1,5 +1,5 @@
 import torch.nn.functional as F
-from models.add import ADDResBlk
+from network.add import ADDResBlk
 from torch import nn
 import torch
 
@@ -117,10 +117,10 @@ class ADDGenerator(nn.Module):
 
 
 class AEI_Net(nn.Module):
-    def __init__(self):
+    def __init__(self, c_id=512):
         super(AEI_Net, self).__init__()
         self.encoder = MAE()
-        self.generator = ADDGenerator()
+        self.generator = ADDGenerator(c_id=c_id)
 
     def forward(self, Xt, z_id):
         attr = self.encoder(Xt)
