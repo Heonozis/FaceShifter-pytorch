@@ -39,8 +39,8 @@ class ADD(nn.Module):
 
 def conv(c_in, c_out):
     return nn.Sequential(
+        nn.ReLU(inplace=True),
         nn.Conv2d(in_channels=c_in, out_channels=c_out, kernel_size=3, stride=1, padding=1, bias=False),
-        nn.ReLU(inplace=True)
     )
 
 
