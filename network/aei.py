@@ -45,14 +45,12 @@ class MAE(nn.Module):
         self.conv2 = conv(32, 64)
         self.conv3 = conv(64, 128)
         self.conv4 = conv(128, 256)
-        self.conv5 = conv(256, 512)
-        self.conv6 = conv(512, 512)
+        self.conv5 = conv(256, 256)
 
-        self.conv_t1 = conv_transpose(512, 512)
-        self.conv_t2 = conv_transpose(1024, 256)
-        self.conv_t3 = conv_transpose(512, 128)
-        self.conv_t4 = conv_transpose(256, 64)
-        self.conv_t5 = conv_transpose(128, 32)
+        self.conv_t1 = conv_transpose(256, 256)
+        self.conv_t2 = conv_transpose(512, 128)
+        self.conv_t3 = conv_transpose(256, 64)
+        self.conv_t4 = conv_transpose(128, 32)
 
         self.apply(init_weights)
 
@@ -61,32 +59,29 @@ class MAE(nn.Module):
         enc2 = self.conv2(enc1)
         enc3 = self.conv3(enc2)
         enc4 = self.conv4(enc3)
-        enc5 = self.conv5(enc4)
 
-        z_att1 = self.conv6(enc5)
+        z_att1 = self.conv5(enc4)
 
-        z_att2 = self.conv_t1(z_att1, enc5)
-        z_att3 = self.conv_t2(z_att2, enc4)
-        z_att4 = self.conv_t3(z_att3, enc3)
-        z_att5 = self.conv_t4(z_att4, enc2)
-        z_att6 = self.conv_t5(z_att5, enc1)
+        z_att2 = self.conv_t1(z_att1, enc4)
+        z_att3 = self.conv_t2(z_att2, enc3)
+        z_att4 = self.conv_t3(z_att3, enc2)
+        z_att5 = self.conv_t4(z_att4, enc1)
 
-        z_att7 = F.interpolate(z_att6, scale_factor=2, mode='bilinear', align_corners=True)
+        z_att6 = F.interpolate(z_att5, scale_factor=2, mode='bilinear', align_corners=True)
 
-        return z_att1, z_att2, z_att3, z_att4, z_att5, z_att6, z_att7
+        return z_att1, z_att2, z_att3, z_att4, z_att5, z_att6
 
 
 class ADDGenerator(nn.Module):
     def __init__(self, c_id=512):
         super(ADDGenerator, self).__init__()
-        self.conv_t = nn.ConvTranspose2d(in_channels=c_id, out_channels=1024, kernel_size=2, stride=1, padding=0, bias=False)
-        self.add1 = ADDResBlk(512, 512, 512, c_id)
-        self.add2 = ADDResBlk(512, 512, 1024, c_id)
-        self.add3 = ADDResBlk(512, 512, 512, c_id)
-        self.add4 = ADDResBlk(512, 256, 256, c_id)
-        self.add5 = ADDResBlk(256, 128, 128, c_id)
-        self.add6 = ADDResBlk(128, 64, 64, c_id)
-        self.add7 = ADDResBlk(64, 3, 64, c_id)
+        self.conv_t = nn.ConvTranspose2d(in_channels=c_id, out_channels=256, kernel_size=2, stride=1, padding=0, bias=False)
+        self.add1 = ADDResBlk(256, 256, 256, c_id)
+        self.add2 = ADDResBlk(256, 256, 512, c_id)
+        self.add3 = ADDResBlk(256, 256, 256, c_id)
+        self.add4 = ADDResBlk(256, 128, 128, c_id)
+        self.add5 = ADDResBlk(128, 64, 64, c_id)
+        self.add6 = ADDResBlk(64, 3, 64, c_id)
 
         self.apply(init_weights)
 
@@ -101,12 +96,7 @@ class ADDGenerator(nn.Module):
         x = self.add4(x, z_att[3], z_id)
         x = F.interpolate(x, scale_factor=2, mode='bilinear', align_corners=True)
         x = self.add5(x, z_att[4], z_id)
-        x = F.interpolate(x, scale_factor=2, mode='bilinear', align_corners=True)
-        x = self.add6(x, z_att[5], z_id)
-        x = F.interpolate(x, scale_factor=2, mode='bilinear', align_corners=True)
-        Y_st = self.add7(x, z_att[6], z_id)
-
-        return torch.tanh(Y_st)
+        return torch.tanh(x)
 
 
 class AEI_Net(nn.Module):
