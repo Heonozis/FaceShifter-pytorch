@@ -17,7 +17,7 @@ def init_weights(m):
 
 def conv(c_in, c_out, norm=nn.BatchNorm2d):
     return nn.Sequential(
-        nn.Conv2d(in_channels=c_in, out_channels=c_out, kernel_size=3, stride=1, padding=1, bias=False),
+        nn.Conv2d(in_channels=c_in, out_channels=c_out, kernel_size=4, stride=2, padding=1, bias=False),
         norm(c_out),
         nn.LeakyReLU(0.1, inplace=True)
     )
@@ -26,7 +26,7 @@ def conv(c_in, c_out, norm=nn.BatchNorm2d):
 class conv_transpose(nn.Module):
     def __init__(self, c_in, c_out, norm=nn.BatchNorm2d):
         super(conv_transpose, self).__init__()
-        self.conv_t = nn.ConvTranspose2d(in_channels=c_in, out_channels=c_out, kernel_size=3, stride=1, padding=1, bias=False)
+        self.conv_t = nn.ConvTranspose2d(in_channels=c_in, out_channels=c_out, kernel_size=4, stride=2, padding=1, bias=False)
         self.bn = norm(c_out)
         self.lrelu = nn.LeakyReLU(0.1, inplace=True)
 
@@ -46,15 +46,13 @@ class MAE(nn.Module):
         self.conv3 = conv(64, 128)
         self.conv4 = conv(128, 256)
         self.conv5 = conv(256, 512)
-        self.conv6 = conv(512, 1024)
-        self.conv7 = conv(1024, 1024)
+        self.conv6 = conv(512, 512)
 
-        self.conv_t1 = conv_transpose(1024, 1024)
-        self.conv_t2 = conv_transpose(2048, 512)
-        self.conv_t3 = conv_transpose(1024, 256)
-        self.conv_t4 = conv_transpose(512, 128)
-        self.conv_t5 = conv_transpose(256, 64)
-        self.conv_t6 = conv_transpose(128, 32)
+        self.conv_t1 = conv_transpose(512, 512)
+        self.conv_t2 = conv_transpose(1024, 256)
+        self.conv_t3 = conv_transpose(512, 128)
+        self.conv_t4 = conv_transpose(256, 64)
+        self.conv_t5 = conv_transpose(64, 32)
 
         self.apply(init_weights)
 
@@ -64,34 +62,31 @@ class MAE(nn.Module):
         enc3 = self.conv3(enc2)
         enc4 = self.conv4(enc3)
         enc5 = self.conv5(enc4)
-        enc6 = self.conv6(enc5)
 
-        z_att1 = self.conv7(enc6)
+        z_att1 = self.conv6(enc5)
 
-        z_att2 = self.conv_t1(z_att1, enc6)
-        z_att3 = self.conv_t2(z_att2, enc5)
-        z_att4 = self.conv_t3(z_att3, enc4)
-        z_att5 = self.conv_t4(z_att4, enc3)
-        z_att6 = self.conv_t5(z_att5, enc2)
-        z_att7 = self.conv_t6(z_att6, enc1)
+        z_att2 = self.conv_t1(z_att1, enc5)
+        z_att3 = self.conv_t2(z_att2, enc4)
+        z_att4 = self.conv_t3(z_att3, enc3)
+        z_att5 = self.conv_t4(z_att4, enc2)
+        z_att6 = self.conv_t5(z_att5, enc1)
 
-        z_att8 = F.interpolate(z_att7, scale_factor=2, mode='bilinear', align_corners=True)
+        z_att7 = F.interpolate(z_att6, scale_factor=2, mode='bilinear', align_corners=True)
 
-        return z_att1, z_att2, z_att3, z_att4, z_att5, z_att6, z_att7, z_att8
+        return z_att1, z_att2, z_att3, z_att4, z_att5, z_att6, z_att7
 
 
 class ADDGenerator(nn.Module):
     def __init__(self, c_id=512):
         super(ADDGenerator, self).__init__()
         self.conv_t = nn.ConvTranspose2d(in_channels=c_id, out_channels=1024, kernel_size=2, stride=1, padding=0, bias=False)
-        self.add1 = ADDResBlk(1024, 1024, 1024, c_id)
-        self.add2 = ADDResBlk(1024, 1024, 2048, c_id)
-        self.add3 = ADDResBlk(1024, 1024, 1024, c_id)
-        self.add4 = ADDResBlk(1024, 512, 512, c_id)
-        self.add5 = ADDResBlk(512, 256, 256, c_id)
-        self.add6 = ADDResBlk(256, 128, 128, c_id)
-        self.add7 = ADDResBlk(128, 64, 64, c_id)
-        self.add8 = ADDResBlk(64, 3, 64, c_id)
+        self.add1 = ADDResBlk(512, 512, 512, c_id)
+        self.add2 = ADDResBlk(512, 512, 1024, c_id)
+        self.add3 = ADDResBlk(512, 512, 512, c_id)
+        self.add4 = ADDResBlk(512, 256, 256, c_id)
+        self.add5 = ADDResBlk(256, 128, 128, c_id)
+        self.add6 = ADDResBlk(128, 64, 64, c_id)
+        self.add7 = ADDResBlk(64, 3, 64, c_id)
 
         self.apply(init_weights)
 
@@ -109,9 +104,7 @@ class ADDGenerator(nn.Module):
         x = F.interpolate(x, scale_factor=2, mode='bilinear', align_corners=True)
         x = self.add6(x, z_att[5], z_id)
         x = F.interpolate(x, scale_factor=2, mode='bilinear', align_corners=True)
-        x = self.add7(x, z_att[6], z_id)
-        x = F.interpolate(x, scale_factor=2, mode='bilinear', align_corners=True)
-        Y_st = self.add8(x, z_att[7], z_id)
+        Y_st = self.add7(x, z_att[6], z_id)
 
         return torch.tanh(Y_st)
 
