@@ -52,7 +52,7 @@ class MAE(nn.Module):
         self.conv_t2 = conv_transpose(1024, 256)
         self.conv_t3 = conv_transpose(512, 128)
         self.conv_t4 = conv_transpose(256, 64)
-        self.conv_t5 = conv_transpose(64, 32)
+        self.conv_t5 = conv_transpose(128, 32)
 
         self.apply(init_weights)
 
