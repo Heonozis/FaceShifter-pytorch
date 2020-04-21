@@ -96,6 +96,8 @@ class ADDGenerator(nn.Module):
         x = self.add4(x, z_att[3], z_id)
         x = F.interpolate(x, scale_factor=2, mode='bilinear', align_corners=True)
         x = self.add5(x, z_att[4], z_id)
+        x = F.interpolate(x, scale_factor=2, mode='bilinear', align_corners=True)
+        x = self.add6(x, z_att[5], z_id)
         return torch.tanh(x)
 
 
