@@ -17,7 +17,7 @@ def init_weights(m):
 
 def conv(c_in, c_out, norm=nn.BatchNorm2d):
     return nn.Sequential(
-        nn.Conv2d(in_channels=c_in, out_channels=c_out, kernel_size=4, stride=2, padding=1, bias=False),
+        nn.Conv2d(in_channels=c_in, out_channels=c_out, kernel_size=3, stride=1, padding=1, bias=False),
         norm(c_out),
         nn.LeakyReLU(0.1, inplace=True)
     )
@@ -26,7 +26,7 @@ def conv(c_in, c_out, norm=nn.BatchNorm2d):
 class conv_transpose(nn.Module):
     def __init__(self, c_in, c_out, norm=nn.BatchNorm2d):
         super(conv_transpose, self).__init__()
-        self.conv_t = nn.ConvTranspose2d(in_channels=c_in, out_channels=c_out, kernel_size=4, stride=2, padding=1, bias=False)
+        self.conv_t = nn.ConvTranspose2d(in_channels=c_in, out_channels=c_out, kernel_size=3, stride=1, padding=1, bias=False)
         self.bn = norm(c_out)
         self.lrelu = nn.LeakyReLU(0.1, inplace=True)
 
