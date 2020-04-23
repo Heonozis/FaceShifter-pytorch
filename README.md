@@ -28,7 +28,7 @@ Get embedding model weights
 wget https://www.dropbox.com/s/kzo52d9neybjxsb/model_ir_se50.pth?dl=0 -O saved_models/model_ir_se50.pth
 ```
 
-Get CelebA dataset and save to `../img_align_celeba`
+Get CelebA dataset and extract to `../img_align_celeba`
 ```
 https://drive.google.com/open?id=0B7EVK8r0v71pZjFTYXZWM3FlRnM
 ```
