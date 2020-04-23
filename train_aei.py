@@ -1,16 +1,16 @@
-from network.aei import *
 from network.MultiScaleDiscriminator import *
-from utils.Dataset import FaceEmbed, With_Identity
 from torch.utils.data import DataLoader
-import torch.optim as optim
 from face_modules.model import Backbone
+from utils.Dataset import FaceEmbed
 import torch.nn.functional as F
+import torch.optim as optim
+from network.aei import *
+from apex import amp
+import torchvision
+import visdom
 import torch
 import time
-import torchvision
 import cv2
-from apex import amp
-import visdom
 
 
 vis = visdom.Visdom(server='127.0.0.1', env='faceshifter', port=8097)
@@ -23,10 +23,8 @@ save_epoch = 1
 model_save_path = './saved_models/'
 optim_level = 'O1'
 
-# fine_tune_with_identity = False
 
 device = torch.device('cuda')
-# torch.set_num_threads(12)
 
 G = AEI_Net(c_id=512).to(device)
 D = MultiscaleDiscriminator(input_nc=3, n_layers=6, norm_layer=torch.nn.InstanceNorm2d).to(device)
@@ -77,23 +75,16 @@ def make_image(Xs, Xt, Y):
     Y = get_grid_image(Y)
     return torch.cat((Xs, Xt, Y), dim=1).numpy()
 
-
-# prior = torch.FloatTensor(cv2.imread('./prior.png', 0).astype(np.float)/255).to(device)
-
 print(torch.backends.cudnn.benchmark)
-#torch.backends.cudnn.benchmark = True
 for epoch in range(0, max_epoch):
-    # torch.cuda.empty_cache()
     for iteration, data in enumerate(dataloader):
         start_time = time.time()
         Xs, Xt, same_person = data
         Xs = Xs.to(device)
         Xt = Xt.to(device)
-        # embed = embed.to(device)
         with torch.no_grad():
-            embed, Xs_feats = arcface(F.interpolate(Xs[:, :, 19:237, 19:237], [112, 112], mode='bilinear', align_corners=True))
+            embed, Xs_feats = arcface(F.interpolate(Xs, [112, 112], mode='bilinear', align_corners=True))
         same_person = same_person.to(device)
-        #diff_person = (1 - same_person)
 
         # train G
         opt_G.zero_grad()
@@ -106,7 +97,7 @@ for epoch in range(0, max_epoch):
             L_adv += hinge_loss(di[0], True)
 
 
-        Y_aligned = Y[:, :, 19:237, 19:237]
+        Y_aligned = Y
         ZY, Y_feats = arcface(F.interpolate(Y_aligned, [112, 112], mode='bilinear', align_corners=True))
         L_id =(1 - torch.cosine_similarity(embed, ZY, dim=1)).mean()
 
@@ -118,18 +109,20 @@ for epoch in range(0, max_epoch):
 
         L_rec = torch.sum(0.5 * torch.mean(torch.pow(Y - Xt, 2).reshape(batch_size, -1), dim=1) * same_person) / (same_person.sum() + 1e-6)
 
-        lossG = 1*L_adv + 10*L_attr + 5*L_id + 10*L_rec
-        # lossG = 1*L_adv + 10*L_attr + 5*L_id + 10*L_rec
+        l_adv = 1
+        l_att = 10
+        l_id = 1
+        l_rec = 10
+
+        lossG = l_adv*L_adv + l_att*L_attr + l_id*L_id + l_rec*L_rec
+
         with amp.scale_loss(lossG, opt_G) as scaled_loss:
             scaled_loss.backward()
 
-        # lossG.backward()
         opt_G.step()
 
         # train D
         opt_D.zero_grad()
-        # with torch.no_grad():
-        #     Y, _ = G(Xt, embed)
         fake_D = D(Y.detach())
         loss_fake = 0
         for di in fake_D:
@@ -139,13 +132,11 @@ for epoch in range(0, max_epoch):
         loss_true = 0
         for di in true_D:
             loss_true += hinge_loss(di[0], True)
-        # true_score2 = D(Xt)[-1][0]
 
         lossD = 0.5*(loss_true.mean() + loss_fake.mean())
 
         with amp.scale_loss(lossD, opt_D) as scaled_loss:
             scaled_loss.backward()
-        # lossD.backward()
         opt_D.step()
         batch_time = time.time() - start_time
         if iteration % show_step == 0:
