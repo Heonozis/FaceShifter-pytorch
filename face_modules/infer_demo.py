@@ -12,7 +12,7 @@ mtcnn = MTCNN()
 
 model = Backbone(50, 0.6, 'ir_se').to(device)
 model.eval()
-model.load_state_dict(torch.load('./model_ir_se50.pth'))
+model.load_state_dict(torch.load('./saved_models/model_ir_se50.pth'))
 
 # threshold = 1.54
 test_transform = trans.Compose([

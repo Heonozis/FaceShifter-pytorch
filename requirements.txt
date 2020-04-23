@@ -3,3 +3,5 @@ torchvision
 pillow
 opencv-python
 visdom
+python-xlib
+imutils

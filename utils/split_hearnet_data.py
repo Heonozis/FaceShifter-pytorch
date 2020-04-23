@@ -28,7 +28,7 @@ G = G.cuda()
 
 arcface = Backbone(50, 0.6, 'ir_se').to(device)
 arcface.eval()
-arcface.load_state_dict(torch.load('../face_modules/model_ir_se50.pth', map_location=device), strict=False)
+arcface.load_state_dict(torch.load('../saved_models/model_ir_se50.pth', map_location=device), strict=False)
 
 test_transform = transforms.Compose([
     transforms.ToTensor(),
