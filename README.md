@@ -22,18 +22,12 @@ pip install -v --no-cache-dir --global-option="--cpp_ext" --global-option="--cud
 ```
 
 ### Data
-Get embedding model weights
+1. Get embedding model [weights](https://www.dropbox.com/s/kzo52d9neybjxsb/model_ir_se50.pth?dl=0)
 
-```
-wget https://www.dropbox.com/s/kzo52d9neybjxsb/model_ir_se50.pth?dl=0 -O saved_models/model_ir_se50.pth
-```
+2. Get CelebA [dataset](https://drive.google.com/open?id=0B7EVK8r0v71pZjFTYXZWM3FlRnM
+) and extract to `../img_align_celeba`
 
-Get CelebA dataset and extract to `../img_align_celeba`
-```
-https://drive.google.com/open?id=0B7EVK8r0v71pZjFTYXZWM3FlRnM
-```
-
-Preprocess data
+3. Preprocess data
 ```
 python face_modules/preprocess.py
 ```
@@ -47,7 +41,7 @@ https://HOST:8097
 ```
 
 ### Demo
-1. Download pretrained (45 epochs) G_latest.pth and D_latest.pth into `./saved_models` folder
+1. Download pretrained (45 epochs) [G_latest.pth](https://drive.google.com/open?id=1RUfxwsBIpQvcDdZTCTig6H2PLpLJSjg6) and [D_latest.pth](https://drive.google.com/open?id=15Y17s8_AaEnz536b6O0bAWv8KBKSgr7D) into `./saved_models` folder
 2. Run `python webcam_aei.py`
 3. (optional) Change `./source.jpg` to change demo source image
 
