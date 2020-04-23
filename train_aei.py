@@ -49,7 +49,7 @@ try:
 except Exception as e:
     print(e)
 
-dataset = FaceEmbed(['../img_align_celeba/'], same_prob=0.8)
+dataset = FaceEmbed(['../celeba_64/'], same_prob=0.8)
 
 dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=0, drop_last=True)
 
