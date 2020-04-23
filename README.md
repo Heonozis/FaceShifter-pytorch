@@ -50,3 +50,6 @@ https://HOST:8097
 1. Download pretrained (45 epochs) G_latest.pth and D_latest.pth into `./saved_models` folder
 2. Run `python webcam_aei.py`
 3. (optional) Change `./source.jpg` to change demo source image
+
+### Todo
+- Add HEAR-Net training and demo
