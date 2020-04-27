@@ -42,7 +42,7 @@ https://HOST:8097
 
 ### Demo
 1. Download pretrained (45 epochs) [G_latest.pth](https://drive.google.com/open?id=1RUfxwsBIpQvcDdZTCTig6H2PLpLJSjg6) and [D_latest.pth](https://drive.google.com/open?id=15Y17s8_AaEnz536b6O0bAWv8KBKSgr7D) into `./saved_models` folder
-2. Run `python webcam_aei.py`
+2. Run `python demo_cam.py`
 3. (optional) Change `./source.jpg` to change demo source image
 
 ### Todo

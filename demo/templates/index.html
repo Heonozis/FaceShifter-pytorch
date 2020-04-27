@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <title>Face Shifter</title>
+</head>
+<body>
+
+{% if error %}
+<div class="row">
+    <div class="alert alert-danger" role="alert">
+        {{error}}
+    </div>
+</div>
+{% endif %}
+
+
+<form action="/" method="POST" enctype="multipart/form-data" class="form-inline">
+    <div class="form-row align-items-center">
+        <label for="source" class="btn">Image 1</label>
+        <input type="file" name="source" id="source" class="form-control-file" >
+    </div>
+    <div class="form-row align-items-center">
+        <label for="target" class="btn">Image 2</label>
+        <input type="file" name="target" id="target" class="form-control-file">
+    </div>
+    <button type="submit" class="btn btn-primary">Process</button>
+</form>
+
+{% if data %}
+<div class="row">
+    <div class="col-md-3">Source</div>
+    <div class="col-md-3">Target</div>
+    <div class="col-md-3">Result</div>
+</div>
+
+<div class="row">
+    <div class="col-md-3"><img src="{{data.source}}" style="width: 100%"></div>
+    <div class="col-md-3"><img src="{{data.target}}" style="width: 100%"></div>
+    <div class="col-md-3"><img src="{{data.result_s2t}}" style="width: 100%"></div>
+</div>
+<div class="row">
+    <div class="col-md-3"><img src="{{data.target}}" style="width: 100%"></div>
+    <div class="col-md-3"><img src="{{data.source}}" style="width: 100%"></div>
+    <div class="col-md-3"><img src="{{data.result_t2s}}" style="width: 100%"></div>
+</div>
+{% endif %}
+
+</body>
+</html>

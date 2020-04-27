@@ -98,8 +98,8 @@ while True:
         print(f'inference time: {st} sec')
         Yt = Yt.transpose([1, 2, 0])*0.5 + 0.5
         Yt = Yt
-        Yt_trans_inv = cv2.warpAffine(Yt, trans_inv, (np.size(Xt_raw, 1), np.size(Xt_raw, 0)), borderValue=(0, 0, 0))
-        mask_ = cv2.warpAffine(mask,trans_inv, (np.size(Xt_raw, 1), np.size(Xt_raw, 0)), borderValue=(0, 0, 0))
+        Yt_trans_inv = cv2.warpAffine(Yt, trans_inv, (np.size(Xt_raw, 1), np.size(Xt_raw, 0)), borderMode=cv2.BORDER_TRANSPARENT)
+        mask_ = cv2.warpAffine(mask,trans_inv, (np.size(Xt_raw, 1), np.size(Xt_raw, 0)), borderMode=cv2.BORDER_TRANSPARENT)
         mask_ = np.expand_dims(mask_, 2)
         Yt_trans_inv = mask_*Yt_trans_inv + (1-mask_)*(Xt_raw.astype(np.float)/255.)
 
