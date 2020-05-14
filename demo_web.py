@@ -46,7 +46,7 @@ def process():
         t2s = swap_faces(Xs_raw, Xt_raw)
         write_image(f'./demo/static/result_t2s_{id}.jpg', t2s)
     except Exception as e:
-        error = 'No faces detected on one of the images...'
+        error = 'Exception: ' + str(e)
         return render_template('index.html', error=error)
 
 
