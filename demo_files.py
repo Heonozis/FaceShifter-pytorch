@@ -1,11 +1,9 @@
 import sys
 import argparse
+import cv2
+from demo.lib import swap_faces
 
 sys.path.append('./face_modules/')
-from demo.lib import swap_faces
-import cv2
-import time
-
 
 def write_image(path, img):
     img = cv2.convertScaleAbs(img, alpha=(255.0))
@@ -25,13 +23,6 @@ def process_image_files():
     s2t = swap_faces(Xs_raw, Xt_raw)
     write_image(args.output_image, s2t)
 
-    #try:
-
-        #s2t = swap_faces(Xs_raw, Xt_raw)
-        #write_image(args.output_image)
-
-    #except Exception as e:
-    #    print 'Exception: ' + str(e)
     return
 
 if __name__ == '__main__':
