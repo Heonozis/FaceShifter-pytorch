@@ -29,7 +29,7 @@ pip install -v --no-cache-dir --global-option="--cpp_ext" --global-option="--cud
 
 3. Preprocess data
 ```
-python face_modules/preprocess.py
+python face_modules/preprocess_images.py
 ```
 
 ### Train
