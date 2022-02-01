@@ -7,8 +7,8 @@ import cv2
 import os
 
 
-img_root_dir = '../img_align_celeba'
-save_path = '../celeba_64'
+img_root_dir = './img_align_celeba'
+save_path = './celeba_64'
 
 device = torch.device('cuda:0')
 mtcnn = MTCNN()
